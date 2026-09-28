@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Chia-Network/chia-mcp",
+  "description": "MCP server for the Chia blockchain. Read-only full-node access via Coinset hosted nodes — not a wallet. 36 tools (up to 38 with options) covering blocks, coins, mempool, fees, addresses, and on-chain puzzle inspection.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/Chia-Network/chia-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "chia-mcp",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

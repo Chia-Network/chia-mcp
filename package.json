@@ -1,0 +1,67 @@
+{
+  "name": "chia-mcp",
+  "version": "1.0.0",
+  "description": "MCP server exposing Chia blockchain full node RPC endpoints as tools for AI agents. Read-only full-node access via Coinset hosted nodes \u2014 not a wallet.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "chia-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "src/bech32m.ts",
+    "src/index.ts",
+    "src/prompts.ts",
+    "src/resources.ts",
+    "src/rpc.ts",
+    "src/tools.ts",
+    "src/types.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chia-Network/chia-mcp"
+  },
+  "homepage": "https://github.com/Chia-Network/chia-mcp",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "chia",
+    "blockchain",
+    "model-context-protocol",
+    "xch",
+    "cat",
+    "nft",
+    "chialisp",
+    "coinset",
+    "utxo"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:on-chain": "CHIA_MCP_ON_CHAIN=1 vitest run",
+    "test:on-chain:mainnet": "CHIA_MCP_ON_CHAIN=1 CHIA_NETWORK=mainnet vitest run",
+    "test:off-chain": "vitest run",
+    "check:drift": "node scripts/check-drift.js",
+    "check:upstream": "node scripts/check-upstream-drift.js",
+    "prepublishOnly": "rm -rf dist && npm run build",
+    "check:drift:strict": "node scripts/check-drift.js --strict"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "chia-wallet-sdk": "^0.36.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.11"
+  }
+}
