@@ -1,5 +1,6 @@
 {
   "name": "chia-mcp",
+  "mcpName": "io.github.Chia-Network/chia-mcp",
   "version": "1.0.0",
   "description": "MCP server exposing Chia blockchain full node RPC endpoints as tools for AI agents. Read-only full-node access via Coinset hosted nodes \u2014 not a wallet.",
   "license": "Apache-2.0",
