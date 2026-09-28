@@ -4,10 +4,6 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that e
 
 ## Quick Start
 
-> **Draft — not yet published to npm.** The `npx -y chia-mcp` command shown below will not work until the package is published. For now, use the [git clone installation](#install-from-source-current-method) at the bottom of this page, then reference `node /path/to/chia-mcp/dist/index.js` in your MCP client config instead of `npx`.
->
-> Once published, all the `npx` examples below will work as written.
-
 ### Claude Desktop
 
 Add to your config file:
