@@ -143,6 +143,76 @@ Set `CHIA_NETWORK` to use testnet11:
 - **`address_decode`** — Decode a bech32m Chia address back to its puzzle hash.
 - **`coin_id`** — Compute a coin ID from parent_coin_id + puzzle_hash + amount.
 
+## Tool Examples
+
+Quick reference showing input → output shape for the most commonly used tools.
+
+### get_blockchain_state
+```
+Input:  {} (no parameters)
+Output: { peak_height: 9470000, sync: { synced: true }, difficulty: 2528, space: "33501849665552384", mempool_size: 3, ... }
+```
+
+### get_coin_record_by_name
+```
+Input:  { name: "0xabc123..." }
+Output: { coin: { parent_coin_info: "0x...", puzzle_hash: "0x...", amount: 1750000000000 }, confirmed_block_index: 5000000, spent_block_index: 5000042, coinbase: false, timestamp: 1700000000 }
+```
+
+### get_coin_records_by_puzzle_hash
+```
+Input:  { puzzle_hash: "0xabc123...", include_spent_coins: false }
+Output: [ { coin: { ... }, confirmed_block_index: ..., spent_block_index: 0 }, ... ]
+Note:   Response truncated at 50KB. For complete balance, use get_address_summary instead.
+```
+
+### get_address_summary
+```
+Input:  { address: "xch1abc123..." }
+Output: { total_balance_mojos: "1750000000000", total_balance_xch: "1.75", coin_count: 3, complete: true, oldest_coin_height: 4500000, newest_coin_height: 9400000 }
+Note:   Pages through ALL unspent coins. The `complete` flag indicates whether the full balance was reached.
+```
+
+### trace_coin_lineage
+```
+Input:  { coin_id: "0xabc123...", max_depth: 10 }
+Output: { lineage: [ { coin_id: "0x...", parent: "0x...", amount: 1750000000000, height: 5000042 }, ... ], depth_reached: 5, reached_coinbase: true }
+```
+
+### summarize_block
+```
+Input:  { header_hash: "0xabc123..." }
+Output: { height: 5000042, is_transaction_block: true, num_additions: 12, num_removals: 6, total_amount_created: "3500000000000", total_amount_spent: "3500000000000", top_movements: [ ... ] }
+Note:   Much smaller than raw get_additions_and_removals (which can be 1+ MB).
+```
+
+### decode_offer
+```
+Input:  { offer: "offer1..." }
+Output: { valid: true, summary: { offered: { xch: "1.0" }, requested: { "asset_id_abc...": 100 } }, coin_spends: 3, has_signature: true }
+```
+
+### address_encode
+```
+Input:  { puzzle_hash: "0xabc123...", prefix: "xch" }
+Output: { address: "xch1abc123..." }
+Note:   Local computation — no RPC call.
+```
+
+### address_decode
+```
+Input:  { address: "xch1abc123..." }
+Output: { puzzle_hash: "0xabc123..." }
+Note:   Local computation — no RPC call.
+```
+
+### coin_id
+```
+Input:  { parent_coin_info: "0x...", puzzle_hash: "0x...", amount: 1750000000000 }
+Output: { coin_id: "0xabc123..." }
+Note:   SHA256(parent + puzzle_hash + amount). Accepts string amounts for values > Number.MAX_SAFE_INTEGER.
+```
+
 ## Resources
 
 ### Network State (live)
@@ -204,9 +274,9 @@ The server provides 9 prompts that encode tool sequencing and failure modes for 
 - **`network_verified` lifecycle** — The `network_verified` field in every response envelope starts as `"pending"` until the first successful RPC probe, then resolves to `true` (match) or `false` (mismatch). If the configured node is unreachable, it resolves to `false` (probe failed).
 - **npm audit advisories** — Transitive dependencies from the MCP SDK may report npm audit advisories. These are unreachable in stdio-transport configuration (no HTTP server is exposed). They do not affect the security posture of a standard chia-mcp deployment.
 
-## Install from Source (current method)
+## Install from Source
 
-Until the package is published to npm, install from source:
+For development or contributing:
 
 ```bash
 git clone https://github.com/Chia-Network/chia-mcp.git
@@ -215,7 +285,7 @@ npm install
 npm run build
 ```
 
-Then use `node /path/to/chia-mcp/dist/index.js` in your MCP client config in place of `npx -y chia-mcp`. For example, in Claude Desktop:
+Then use `node /path/to/chia-mcp/dist/index.js` in your MCP client config instead of `npx -y chia-mcp`. For example, in Claude Desktop:
 
 ```json
 {
