@@ -24,7 +24,7 @@ const GUIDES: Record<string, { title: string; description: string; content: stri
     title: "Chia Coinset Model",
     description:
       "Core concepts: coins (UTXO model), puzzle hashes, coin IDs, spend bundles, conditions, " +
-      "CATs, NFTs, DIDs, and 39 common LLM mistakes about Chia vs account-based chains.",
+      "CATs, NFTs, DIDs, and 45 common LLM mistakes about Chia vs account-based chains.",
     content: `# Chia Coinset Model — Agent Reference
 
 ## Coins (UTXOs)
@@ -67,7 +67,7 @@ A transaction is a SpendBundle: a list of CoinSpends (each: coin + puzzle reveal
 - **DIDs:** Decentralized identifiers, also singletons.
 - **Offers:** Peer-to-peer atomic swaps. An offer file is a partial spend bundle — no intermediary needed.
 
-## Common LLM Mistakes About Chia (39 items)
+## Common LLM Mistakes About Chia (45 items)
 
 - **"Query the balance of address X"** — There is no balance RPC. Sum unspent coins at the puzzle hash. Exclude CATs/NFTs.
 - **"Send a transaction to address X"** — Chia doesn't send TO addresses. You spend coins and create new coins locked to a puzzle hash.
@@ -108,6 +108,12 @@ A transaction is a SpendBundle: a list of CoinSpends (each: coin + puzzle reveal
 - **"An offer's coin spends tell you what you would receive"** — They show only the offered side (what the maker is giving up). The requested assets are encoded as ASSERT_PUZZLE_ANNOUNCEMENT conditions referencing the taker's side — not decoded by decode_offer. Do not present decode_offer output as a complete picture of the exchange.
 - **"The coin's timestamp tells me when the user sent it"** — A coin's timestamp is the farming timestamp of the transaction block it was created in — set by the winning farmer, not the sender. It reflects when the block was farmed, not when the user broadcast the spend or when it entered the mempool. The gap can be seconds to minutes. Farmer-supplied timestamps are constrained only within a tolerance window and can be slightly non-monotonic across adjacent blocks. Never present timestamp as "the time the user sent this transaction."
 - **"An absent key in a JSON response means an empty set"** — An absent key and an empty array are not equivalent. get_coin_records_by_puzzle_hash returns coin_records: [] (explicit empty array) when no coins match. An absent coin_records key indicates a parsing error, truncated response, or wrong endpoint. success: false with no coin_records key is not the same as success: true with coin_records: []. Always verify the expected key is present before treating its absence as "no results."
+- **"Chia addresses are case-sensitive"** — Bech32m addresses (xch1.../txch1...) are case-insensitive per the bech32m specification. xch1ABC... and xch1abc... decode to the same puzzle hash. In practice, always normalize to lowercase before comparing.
+- **"Higher fee means faster confirmation"** — Chia's block time is ~18.75 seconds regardless of fees. Fees determine mempool priority (which pending transaction gets included in the next transaction block), not block production speed. During low congestion, even zero-fee transactions are included in the next transaction block (~52s mean interval). Fees only matter when the mempool has more pending transactions than a single block can fit.
+- **"The simulator state persists across restarts by default"** — chia dev sim create creates a new simulator instance each time. State does persist across start/stop cycles for the same instance, but each create invocation spawns a fresh instance with a new genesis block.
+- **"Coin records have a type field that tells you if it's a CAT/NFT"** — There is no type field on coin records. The full node RPC returns the same structure for every coin. To determine coin type, inspect the puzzle — check whether the outer puzzle hash matches known patterns (CAT v2, singleton, NFT state layer). See puzzle_mod_hashes in constants.json.
+- **"You can subscribe to mempool changes via WebSocket on Coinset"** — Coinset endpoints are request/response only (HTTP POST). No WebSocket, SSE, or push interface. To monitor the mempool, poll get_all_mempool_tx_ids periodically. A local chia-blockchain node supports WebSocket via its daemon interface, but Coinset does not expose it.
+- **"Chia uses Proof of Stake / I can stake XCH"** — Chia uses Proofs of Space and Time (PoST), not Proof of Stake. There is no staking mechanism. Participation in consensus requires allocating disk space to store plot files (farming), not locking tokens.
 
 ## uint64 Precision Warning
 
