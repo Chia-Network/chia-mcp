@@ -18,6 +18,8 @@ import { NETWORK_CONFIGS, type ChiaNetwork } from "./types.js";
 
 /** Embedded guide content from chia-for-agents docs. */
 const GUIDES: Record<string, { title: string; description: string; content: string }> = {
+  // ⚠️ This guide is also maintained as resources/coin-model.md in chia-for-agents
+  // (https://github.com/Chia-Network/chia-for-agents). Edit both when updating.
   "coin-model": {
     title: "Chia Coinset Model",
     description:
@@ -112,6 +114,8 @@ A transaction is a SpendBundle: a list of CoinSpends (each: coin + puzzle reveal
 Chia amounts are uint64 (max 18,446,744,073,709,551,615). JavaScript's Number.MAX_SAFE_INTEGER is 2^53-1 (9,007,199,254,740,991). Amounts exceeding this lose precision in JSON.parse(). The chia-mcp server converts the following fields to strings in all responses: \`amount\`, \`timestamp\`, \`fee\`, \`cost\`, \`space\`, \`weight\`, \`total_iters\`, \`sub_slot_iters\`, \`required_iters\`, \`mempool_cost\`, \`mempool_max_total_cost\`, \`mempool_min_fee_per_cost\`. Use BigInt or Python for arithmetic on these fields — never jq or JavaScript Number.
 `,
   },
+  // ⚠️ This guide is also maintained as resources/rpc-quickstart.md in chia-for-agents
+  // (https://github.com/Chia-Network/chia-for-agents). Edit both when updating.
   "rpc-quickstart": {
     title: "Chia RPC Quickstart",
     description:
@@ -184,6 +188,8 @@ Returns the pending transaction if still in mempool. Returns success: false with
 - Responses >50KB are automatically truncated by chia-mcp
 `,
   },
+  // ⚠️ This guide is also maintained as the recipe table in AGENTS.md in chia-for-agents
+  // (https://github.com/Chia-Network/chia-for-agents). Edit both when updating.
   recipes: {
     title: "Chia Agent Recipes",
     description:
